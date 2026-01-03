@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#1a5276">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Beach Body">
+  <title>Beach Body Weight Tracker</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Welcome/Setup Screen -->
+  <div id="setup-screen" class="screen">
+    <div class="setup-container">
+      <div class="palm-decoration left"></div>
+      <div class="palm-decoration right"></div>
+      <h1>Welcome to<br><span class="highlight">Beach Body</span></h1>
+      <p class="tagline">Let's get you beach body ready!</p>
+
+      <div class="setup-form">
+        <div class="input-group">
+          <label>Current Weight</label>
+          <div class="weight-input-row">
+            <input type="number" id="setup-current-weight" step="0.1" placeholder="0.0">
+            <select id="setup-unit">
+              <option value="kg">kg</option>
+              <option value="lbs">lbs</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label>Target Weight</label>
+          <div class="weight-input-row">
+            <input type="number" id="setup-target-weight" step="0.1" placeholder="0.0">
+            <span class="unit-display">kg</span>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label>Target Date (Optional)</label>
+          <input type="date" id="setup-target-date">
+        </div>
+
+        <button id="setup-submit" class="btn-wooden">Start My Journey</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main App Container -->
+  <div id="app-container" class="hidden">
+    <!-- Tab Content -->
+    <div id="tab-content">
+      <!-- Log Tab -->
+      <div id="log-tab" class="tab-pane active">
+        <div class="screen-header">
+          <h2>Log Weight</h2>
+          <p class="date-display"></p>
+        </div>
+
+        <div class="log-form">
+          <div class="weight-display">
+            <input type="number" id="log-weight" step="0.1" placeholder="0.0">
+            <span class="unit-label">kg</span>
+          </div>
+
+          <div class="omad-toggle">
+            <label class="checkbox-container">
+              <input type="checkbox" id="omad-checkbox">
+              <span class="checkmark"></span>
+              <span class="checkbox-label">OMAD or Fasted</span>
+              <span class="info-icon" id="omad-info">i</span>
+            </label>
+          </div>
+
+          <div class="date-picker">
+            <label>Date</label>
+            <input type="date" id="log-date">
+          </div>
+
+          <button id="log-submit" class="btn-wooden">Log Weight</button>
+        </div>
+
+        <div class="quick-stats">
+          <div class="stat">
+            <span class="stat-value" id="current-weight-stat">--</span>
+            <span class="stat-label">Current</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value" id="target-weight-stat">--</span>
+            <span class="stat-label">Target</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value" id="to-go-stat">--</span>
+            <span class="stat-label">To Go</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progress Tab -->
+      <div id="progress-tab" class="tab-pane">
+        <div class="screen-header">
+          <h2>Progress</h2>
+        </div>
+
+        <div class="chart-container">
+          <canvas id="weight-chart"></canvas>
+        </div>
+
+        <div class="legend">
+          <div class="legend-item"><span class="dot green"></span> Loss (Fasted)</div>
+          <div class="legend-item"><span class="dot orange"></span> Loss (Regular)</div>
+          <div class="legend-item"><span class="dot red"></span> Gain</div>
+          <div class="legend-item"><span class="line dashed"></span> Projection</div>
+        </div>
+
+        <div class="projection-card">
+          <div class="projection-icon">🏝️</div>
+          <div class="projection-text">
+            <span class="projection-label">Beach Body ETA</span>
+            <span class="projection-date" id="projection-date">--</span>
+            <span class="projection-days" id="projection-days"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- History Tab -->
+      <div id="history-tab" class="tab-pane">
+        <div class="screen-header">
+          <h2>History</h2>
+        </div>
+
+        <div class="history-list" id="history-list">
+          <!-- Entries populated by JS -->
+        </div>
+      </div>
+
+      <!-- Settings Tab -->
+      <div id="settings-tab" class="tab-pane">
+        <div class="screen-header">
+          <h2>Settings</h2>
+        </div>
+
+        <div class="settings-form">
+          <div class="input-group">
+            <label>Target Weight</label>
+            <div class="weight-input-row">
+              <input type="number" id="settings-target-weight" step="0.1">
+              <span class="unit-display">kg</span>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label>Unit</label>
+            <select id="settings-unit">
+              <option value="kg">Kilograms (kg)</option>
+              <option value="lbs">Pounds (lbs)</option>
+            </select>
+          </div>
+
+          <div class="input-group">
+            <label>Target Date (Optional)</label>
+            <input type="date" id="settings-target-date">
+          </div>
+
+          <button id="settings-save" class="btn-wooden">Save Settings</button>
+
+          <div class="danger-zone">
+            <h3>Danger Zone</h3>
+            <button id="reset-app" class="btn-danger">Reset All Data</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Tab Bar -->
+    <nav class="tab-bar">
+      <button class="tab-btn active" data-tab="log">
+        <span class="tab-icon">⚖️</span>
+        <span class="tab-label">Log</span>
+      </button>
+      <button class="tab-btn" data-tab="progress">
+        <span class="tab-icon">📊</span>
+        <span class="tab-label">Progress</span>
+      </button>
+      <button class="tab-btn" data-tab="history">
+        <span class="tab-icon">📋</span>
+        <span class="tab-label">History</span>
+      </button>
+      <button class="tab-btn" data-tab="settings">
+        <span class="tab-icon">⚙️</span>
+        <span class="tab-label">Settings</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- Celebration Modal -->
+  <div id="celebration-modal" class="modal hidden">
+    <div class="modal-content celebration">
+      <div class="confetti-container" id="confetti"></div>
+      <div class="celebration-content">
+        <h1>🌴 BEACH BODY COUNTDOWN 🌴</h1>
+        <p class="celebration-subtitle">You'll hit your target on:</p>
+        <p class="celebration-date" id="celebration-date"></p>
+        <p class="celebration-days" id="celebration-days"></p>
+        <p class="celebration-message">🍹 Keep going! Paradise awaits! 🍹</p>
+        <button id="celebration-close" class="btn-wooden">Let's Go!</button>
+      </div>
+      <div class="wave-bottom"></div>
+    </div>
+  </div>
+
+  <!-- Edit Entry Modal -->
+  <div id="edit-modal" class="modal hidden">
+    <div class="modal-content edit-form">
+      <h2>Edit Entry</h2>
+      <div class="input-group">
+        <label>Weight</label>
+        <div class="weight-input-row">
+          <input type="number" id="edit-weight" step="0.1">
+          <span class="unit-display">kg</span>
+        </div>
+      </div>
+      <div class="input-group">
+        <label class="checkbox-container">
+          <input type="checkbox" id="edit-omad">
+          <span class="checkmark"></span>
+          <span class="checkbox-label">OMAD or Fasted</span>
+        </label>
+      </div>
+      <div class="input-group">
+        <label>Date</label>
+        <input type="date" id="edit-date">
+      </div>
+      <div class="modal-buttons">
+        <button id="edit-save" class="btn-wooden">Save</button>
+        <button id="edit-delete" class="btn-danger">Delete</button>
+        <button id="edit-cancel" class="btn-secondary">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- OMAD Info Modal -->
+  <div id="omad-modal" class="modal hidden">
+    <div class="modal-content info-modal">
+      <h2>OMAD / Fasted</h2>
+      <p>Tick this if you ate <strong>One Meal A Day</strong> or were <strong>fasting</strong> when you weighed in.</p>
+      <p>This helps track which weight loss days were achieved through fasting vs regular eating.</p>
+      <button id="omad-modal-close" class="btn-wooden">Got it!</button>
+    </div>
+  </div>
+
+  <!-- Goal Achieved Modal -->
+  <div id="goal-modal" class="modal hidden">
+    <div class="modal-content celebration goal-achieved">
+      <div class="confetti-container"></div>
+      <h1>🏖️ YOU DID IT! 🏖️</h1>
+      <p class="goal-message">Beach Body Achieved!</p>
+      <p class="goal-submessage">Time to hit the beach! You've reached your target weight!</p>
+      <button id="goal-close" class="btn-wooden">Celebrate!</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

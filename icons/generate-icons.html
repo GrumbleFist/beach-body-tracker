@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Generate Beach Body Icons</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 40px;
+      text-align: center;
+      background: #f0f0f0;
+    }
+    canvas {
+      border: 1px solid #ccc;
+      margin: 20px;
+      background: white;
+    }
+    button {
+      padding: 15px 30px;
+      font-size: 18px;
+      cursor: pointer;
+      background: #2e86ab;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      margin: 10px;
+    }
+    button:hover {
+      background: #1a5276;
+    }
+    .instructions {
+      background: #fffde7;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 600px;
+      margin: 20px auto;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <h1>Beach Body Icon Generator</h1>
+
+  <div class="instructions">
+    <h3>Instructions:</h3>
+    <ol>
+      <li>Click each download button below</li>
+      <li>Save both icons to the <code>icons</code> folder</li>
+      <li>Make sure they're named <code>icon-192.png</code> and <code>icon-512.png</code></li>
+    </ol>
+  </div>
+
+  <div>
+    <h2>192x192 Icon</h2>
+    <canvas id="icon192" width="192" height="192"></canvas>
+    <br>
+    <button onclick="download('icon192', 'icon-192.png')">Download icon-192.png</button>
+  </div>
+
+  <div>
+    <h2>512x512 Icon</h2>
+    <canvas id="icon512" width="512" height="512"></canvas>
+    <br>
+    <button onclick="download('icon512', 'icon-512.png')">Download icon-512.png</button>
+  </div>
+
+  <script>
+    function drawIcon(canvas) {
+      const ctx = canvas.getContext('2d');
+      const size = canvas.width;
+      const scale = size / 192;
+
+      // Background gradient (ocean to sunset)
+      const gradient = ctx.createLinearGradient(0, 0, 0, size);
+      gradient.addColorStop(0, '#ff6b9d');
+      gradient.addColorStop(0.3, '#f39c12');
+      gradient.addColorStop(0.5, '#5dade2');
+      gradient.addColorStop(1, '#1a5276');
+
+      // Rounded rectangle background
+      ctx.beginPath();
+      const radius = size * 0.15;
+      ctx.moveTo(radius, 0);
+      ctx.lineTo(size - radius, 0);
+      ctx.quadraticCurveTo(size, 0, size, radius);
+      ctx.lineTo(size, size - radius);
+      ctx.quadraticCurveTo(size, size, size - radius, size);
+      ctx.lineTo(radius, size);
+      ctx.quadraticCurveTo(0, size, 0, size - radius);
+      ctx.lineTo(0, radius);
+      ctx.quadraticCurveTo(0, 0, radius, 0);
+      ctx.closePath();
+      ctx.fillStyle = gradient;
+      ctx.fill();
+
+      // Sun
+      ctx.beginPath();
+      ctx.arc(size * 0.75, size * 0.25, size * 0.12, 0, Math.PI * 2);
+      ctx.fillStyle = '#f4d03f';
+      ctx.fill();
+
+      // Palm tree trunk
+      ctx.beginPath();
+      ctx.moveTo(size * 0.25, size * 0.85);
+      ctx.quadraticCurveTo(size * 0.28, size * 0.5, size * 0.35, size * 0.3);
+      ctx.lineTo(size * 0.4, size * 0.32);
+      ctx.quadraticCurveTo(size * 0.33, size * 0.55, size * 0.32, size * 0.85);
+      ctx.fillStyle = '#6d4c41';
+      ctx.fill();
+
+      // Palm leaves
+      ctx.fillStyle = '#27ae60';
+
+      // Leaf 1 (right)
+      ctx.beginPath();
+      ctx.moveTo(size * 0.37, size * 0.3);
+      ctx.quadraticCurveTo(size * 0.6, size * 0.2, size * 0.7, size * 0.35);
+      ctx.quadraticCurveTo(size * 0.55, size * 0.28, size * 0.37, size * 0.32);
+      ctx.fill();
+
+      // Leaf 2 (left)
+      ctx.beginPath();
+      ctx.moveTo(size * 0.37, size * 0.3);
+      ctx.quadraticCurveTo(size * 0.15, size * 0.15, size * 0.08, size * 0.3);
+      ctx.quadraticCurveTo(size * 0.2, size * 0.25, size * 0.37, size * 0.32);
+      ctx.fill();
+
+      // Leaf 3 (up)
+      ctx.beginPath();
+      ctx.moveTo(size * 0.37, size * 0.3);
+      ctx.quadraticCurveTo(size * 0.4, size * 0.1, size * 0.55, size * 0.12);
+      ctx.quadraticCurveTo(size * 0.42, size * 0.18, size * 0.39, size * 0.3);
+      ctx.fill();
+
+      // Wave at bottom
+      ctx.fillStyle = 'rgba(255,255,255,0.3)';
+      ctx.beginPath();
+      ctx.moveTo(0, size * 0.85);
+      ctx.quadraticCurveTo(size * 0.25, size * 0.78, size * 0.5, size * 0.85);
+      ctx.quadraticCurveTo(size * 0.75, size * 0.92, size, size * 0.85);
+      ctx.lineTo(size, size);
+      ctx.lineTo(0, size);
+      ctx.closePath();
+      ctx.fill();
+
+      // Scale/weight icon
+      ctx.fillStyle = 'white';
+      ctx.beginPath();
+      ctx.arc(size * 0.65, size * 0.65, size * 0.18, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Scale details
+      ctx.strokeStyle = '#1a5276';
+      ctx.lineWidth = size * 0.02;
+      ctx.beginPath();
+      ctx.arc(size * 0.65, size * 0.65, size * 0.13, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Scale display
+      ctx.fillStyle = '#1a5276';
+      ctx.font = `bold ${size * 0.08}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('kg', size * 0.65, size * 0.65);
+    }
+
+    // Draw both icons
+    drawIcon(document.getElementById('icon192'));
+    drawIcon(document.getElementById('icon512'));
+
+    function download(canvasId, filename) {
+      const canvas = document.getElementById(canvasId);
+      const link = document.createElement('a');
+      link.download = filename;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+  </script>
+</body>
+</html>
